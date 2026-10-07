@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TripScale - Scale Your Travel, Book Buses & Plan Trips</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        tripscale: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        darknavy: '#1d2236'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-banner {
+            background: linear-gradient(rgba(29, 34, 54, 0.82), rgba(37, 99, 235, 0.88)),
+                        url('https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .seat-btn { transition: all 0.2s ease; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 flex flex-col min-h-screen selection:bg-tripscale-500 selection:text-white">
+
+    <!-- TripScale Navigation Header -->
+    <header class="sticky top-0 z-40 w-full bg-white shadow-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-10 bg-tripscale-500 rounded-2xl flex items-center justify-center text-white shadow-md shadow-tripscale-500/30">
+                    <i class="fa-solid fa-scale-balanced text-xl font-extrabold"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-1">
+                        <span class="text-2xl font-black tracking-tight text-slate-900">Trip</span>
+                        <span class="text-2xl font-black tracking-tight text-tripscale-600">Scale</span>
+                    </div>
+                    <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest -mt-1">Bus Booking & Smart Travel Planner</span>
+                </div>
+            </a>
+
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 lg:gap-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+                <a href="#bus-search" class="px-3.5 py-2 rounded-xl hover:text-tripscale-500 hover:bg-slate-50 transition"><i class="fa-solid fa-bus text-tripscale-500 mr-1.5"></i>Bus Tickets</a>
+                <a href="#planner" class="px-3.5 py-2 rounded-xl hover:text-tripscale-500 hover:bg-slate-50 transition"><i class="fa-solid fa-route text-amber-500 mr-1.5"></i>Trip Builder</a>
+                <a href="#collaboration" class="px-3.5 py-2 rounded-xl hover:text-tripscale-500 hover:bg-slate-50 transition"><i class="fa-solid fa-users text-blue-500 mr-1.5"></i>ScalePoll</a>
+                <a href="#expenses" class="px-3.5 py-2 rounded-xl hover:text-tripscale-500 hover:bg-slate-50 transition"><i class="fa-solid fa-calculator text-emerald-500 mr-1.5"></i>ScaleSplit</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="openExportModal()" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-bold transition">
+                    <i class="fa-solid fa-ticket text-tripscale-500"></i>
+                    <span>M-Ticket Sync</span>
+                </button>
+                <button onclick="openBookingModal()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-tripscale-500 hover:bg-tripscale-600 text-white text-xs font-extrabold shadow-lg shadow-tripscale-500/30 transition hover:-translate-y-0.5">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Trip</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- TripScale Hero Search Bar -->
+        <section id="bus-search" class="relative hero-banner text-white py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-5xl mx-auto text-center">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold mb-4">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Scale Your Group Bus Travel Seamlessly
+                </div>
+                <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-4">
+                    Book Bus Tickets & Coordinate Group Journeys
+                </h1>
+                <p class="text-sm sm:text-lg text-slate-200 max-w-2xl mx-auto mb-8 font-medium">
+                    Search Volvo AC, Sleeper & State Transport buses with live seat layouts, group voting, and split payments on TripScale.
+                </p>
+
+                <!-- TripScale Route Search Box -->
+                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-2xl text-slate-800 border border-slate-100">
+                    <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+                        <!-- From -->
+                        <div class="sm:col-span-3 text-left px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+                            <label class="block text-[10px] font-extrabold uppercase text-slate-400">From</label>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <i class="fa-solid fa-bus-departure text-tripscale-500 text-sm"></i>
+                                <input type="text" id="fromInput" value="Mumbai" class="w-full bg-transparent font-extrabold text-slate-900 text-sm outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Swap Icon -->
+                        <div class="sm:col-span-1 flex justify-center">
+                            <button onclick="swapCities()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-tripscale-50 text-tripscale-500 flex items-center justify-center transition border border-slate-200">
+                                <i class="fa-solid fa-arrow-right-arrow-left text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- To -->
+                        <div class="sm:col-span-3 text-left px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+                            <label class="block text-[10px] font-extrabold uppercase text-slate-400">To</label>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <i class="fa-solid fa-bus-arrival text-tripscale-500 text-sm"></i>
+                                <input type="text" id="toInput" value="Goa" class="w-full bg-transparent font-extrabold text-slate-900 text-sm outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="sm:col-span-3 text-left px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200">
+                            <label class="block text-[10px] font-extrabold uppercase text-slate-400">Date of Journey</label>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <i class="fa-regular fa-calendar-days text-tripscale-500 text-sm"></i>
+                                <input type="date" id="journeyDate" value="2026-10-15" class="w-full bg-transparent font-extrabold text-slate-900 text-sm outline-none">
+                            </div>
+                        </div>
+
+                        <!-- Search CTA -->
+                        <div class="sm:col-span-2">
+                            <button onclick="executeBusSearch()" class="w-full py-4 bg-tripscale-500 hover:bg-tripscale-600 text-white font-extrabold rounded-2xl text-xs uppercase tracking-wider transition shadow-lg shadow-tripscale-500/30">
+                                SEARCH BUSES
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Available Operators Section -->
+        <section id="destinations" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 gap-4">
+                <div>
+                    <span class="text-xs font-black text-tripscale-500 uppercase tracking-widest"><i class="fa-solid fa-filter mr-1"></i> TripScale Operators</span>
+                    <h2 class="text-2xl font-black text-slate-900 mt-1">Select Buses for Mumbai to Goa</h2>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 overflow-x-auto hide-scrollbar">
+                    <button onclick="filterBuses('all')" class="bus-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold bg-tripscale-500 text-white" data-type="all">All Buses</button>
+                    <button onclick="filterBuses('AC Sleeper')" class="bus-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-type="AC Sleeper">AC Sleeper</button>
+                    <button onclick="filterBuses('Volvo Multi-Axle')" class="bus-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-type="Volvo Multi-Axle">Volvo Multi-Axle</button>
+                    <button onclick="filterBuses('Primo')" class="bus-filter-btn px-3.5 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100" data-type="Primo">Primo Bus</button>
+                </div>
+            </div>
+
+            <div id="busListingsContainer" class="space-y-4"></div>
+        </section>
+
+        <!-- Itinerary Builder Section -->
+        <section id="planner" class="py-12 bg-white border-y border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <span class="text-xs font-extrabold text-tripscale-500 uppercase tracking-widest"><i class="fa-solid fa-compass mr-1"></i> Integrated Trip Builder</span>
+                        <h2 class="text-2xl font-black text-slate-900 mt-1">Multi-Day Travel Schedule</h2>
+                        <p class="text-slate-500 text-xs mt-1">Organize your bus tickets, hotels, sightseeing, and local transfers in one dashboard.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="bg-tripscale-50 border border-tripscale-100 rounded-2xl px-4 py-2 flex items-center gap-3">
+                            <i class="fa-solid fa-bus text-tripscale-500 text-xl"></i>
+                            <div>
+                                <p class="text-[9px] font-extrabold uppercase tracking-wider text-slate-400">Total Trip Cost</p>
+                                <p id="tripTotalPrice" class="text-lg font-black text-tripscale-600">₹0.00</p>
+                            </div>
+                        </div>
+                        <button onclick="addNewDay()" class="px-4 py-2.5 bg-darknavy hover:bg-slate-800 text-white text-xs font-extrabold rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus text-xs"></i>
+                            <span>Add Day</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 rounded-3xl border border-slate-200/80 shadow-md overflow-hidden">
+                    <!-- Day Tabs -->
+                    <div class="bg-slate-100 p-3 border-b border-slate-200 flex items-center gap-2 overflow-x-auto hide-scrollbar" id="dayTabsContainer"></div>
+
+                    <div class="p-6 border-b border-slate-200/60 bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div>
+                            <h3 id="currentDayTitle" class="text-lg font-extrabold text-slate-900">Day 1 Schedule</h3>
+                            <p id="currentDaySubtitle" class="text-xs text-slate-500">0 items added</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openAddActivityModal('Bus')" class="px-3.5 py-2 bg-tripscale-50 hover:bg-tripscale-100 text-tripscale-700 border border-tripscale-200 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-bus text-tripscale-500"></i> + Add Bus Leg
+                            </button>
+                            <button onclick="openAddActivityModal()" class="px-4 py-2 bg-tripscale-500 hover:bg-tripscale-600 text-white rounded-xl text-xs font-extrabold transition shadow-sm">
+                                <i class="fa-solid fa-plus"></i> Add Custom Activity
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Activities List -->
+                    <div id="activitiesList" class="p-6 space-y-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Group Collaboration & Seat Poll -->
+        <section id="collaboration" class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Group Travelers -->
+                <div class="lg:col-span-5 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-5">
+                        <div>
+                            <span class="text-[10px] font-black text-tripscale-500 uppercase tracking-widest">Co-Passengers</span>
+                            <h3 class="text-lg font-black text-slate-900">Trip Members</h3>
+                        </div>
+                        <button onclick="copyInviteLink()" class="px-3 py-1.5 bg-tripscale-50 text-tripscale-600 rounded-xl text-xs font-bold border border-tripscale-100 hover:bg-tripscale-100">
+                            <i class="fa-solid fa-user-plus mr-1"></i> Invite
+                        </button>
+                    </div>
+
+                    <div id="travelersList" class="space-y-3"></div>
+
+                    <form onsubmit="addTraveler(event)" class="mt-5 pt-4 border-t border-slate-100 flex items-center gap-2">
+                        <input type="text" id="newTravelerName" placeholder="Passenger name..." required class="w-full px-3.5 py-2 rounded-xl border border-slate-200 text-xs outline-none focus:border-tripscale-500">
+                        <button type="submit" class="px-4 py-2 bg-darknavy text-white text-xs font-bold rounded-xl shrink-0">Add</button>
+                    </form>
+                </div>
+
+                <!-- Bus Timing & Preference Poll -->
+                <div class="lg:col-span-7 bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-5">
+                        <div>
+                            <span class="text-[10px] font-black text-tripscale-500 uppercase tracking-widest">ScalePoll</span>
+                            <h3 class="text-lg font-black text-slate-900">Group Bus Departure Vote</h3>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                            ● Voting Open
+                        </span>
+                    </div>
+
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 mb-4">
+                        <p class="font-bold text-slate-800 text-xs sm:text-sm">"Which bus departure time suits everyone for Mumbai to Goa?"</p>
+                    </div>
+
+                    <div id="pollOptionsContainer" class="space-y-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ScaleSplit Expense Ledger -->
+        <section id="expenses" class="py-12 bg-darknavy text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <span class="text-xs font-bold text-tripscale-500 uppercase tracking-widest"><i class="fa-solid fa-calculator mr-1"></i> Bus Fare Ledger</span>
+                        <h2 class="text-2xl font-black text-white mt-0.5">ScaleSplit - Expense Ledger</h2>
+                        <p class="text-slate-400 text-xs mt-1">Split bus ticket charges, food halts, and hotel bookings with equal distribution.</p>
+                    </div>
+                    <button onclick="openAddExpenseModal()" class="px-5 py-2.5 bg-tripscale-500 hover:bg-tripscale-600 text-white rounded-xl text-xs font-extrabold shadow-lg shadow-tripscale-500/20">
+                        <i class="fa-solid fa-plus mr-1"></i> Add Expense
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div class="lg:col-span-7 bg-slate-800/60 rounded-3xl p-6 border border-slate-700">
+                        <h3 class="text-sm font-extrabold text-slate-200 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-receipt text-tripscale-500"></i> Recorded Ticket & Travel Expenses
+                        </h3>
+                        <div id="expenseList" class="space-y-3 max-h-[320px] overflow-y-auto"></div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-slate-800/90 rounded-3xl p-6 border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-sm font-extrabold text-slate-200 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-scale-balanced text-amber-400"></i> Equalized Member Balances
+                            </h3>
+                            <div id="settlementSummary" class="space-y-2.5"></div>
+                        </div>
+                        <p class="text-[10px] text-slate-400 text-center mt-6 pt-4 border-t border-slate-700">Balances calculated per passenger automatically in ₹.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Interactive Bus Seat Selection Modal -->
+    <div id="seatModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+                <div>
+                    <span class="text-[10px] font-black text-tripscale-500 uppercase tracking-widest">Select Bus Seats</span>
+                    <h3 id="seatModalBusName" class="text-base font-extrabold text-slate-900">IntrCity SmartBus (2+1 Sleeper)</h3>
+                </div>
+                <button onclick="closeSeatModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Seat Map UI -->
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 mb-4">
+                <div class="flex items-center justify-end mb-3 text-[10px] font-bold text-slate-400 uppercase gap-2">
+                    <i class="fa-solid fa-steering-wheel text-slate-600 text-sm"></i> Driver Seat
+                </div>
+
+                <div class="grid grid-cols-4 gap-3 text-center" id="seatGrid"></div>
+
+                <!-- Seat Legend -->
+                <div class="flex items-center justify-center gap-6 mt-6 pt-3 border-t border-slate-200 text-xs font-bold text-slate-600">
+                    <div class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-md border-2 border-slate-300 bg-white"></span> Available</div>
+                    <div class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-md bg-emerald-500"></span> Selected</div>
+                    <div class="flex items-center gap-1.5"><span class="w-4 h-4 rounded-md bg-slate-300"></span> Booked</div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+                <div>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase">Selected Seat(s)</p>
+                    <p id="selectedSeatsLabel" class="text-sm font-black text-slate-900">None</p>
+                </div>
+                <button onclick="confirmSeatBooking()" class="px-6 py-2.5 bg-tripscale-500 hover:bg-tripscale-600 text-white font-extrabold text-xs rounded-xl shadow-md">
+                    Confirm Seat Booking
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Add Activity Modal -->
+    <div id="addActivityModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-extrabold text-slate-900" id="modalHeaderTitle">Add Schedule Item</h3>
+                <button onclick="closeAddActivityModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveNewActivity(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 uppercase mb-1">Title / Details</label>
+                    <input type="text" id="actTitle" required placeholder="e.g. Boarding Volvo Bus at Borivali East" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none focus:border-tripscale-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Time</label>
+                        <input type="time" id="actTime" value="21:00" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Ticket Cost (₹)</label>
+                        <input type="number" id="actCost" value="1250" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 uppercase mb-1">Category</label>
+                    <select id="actCategory" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-bold bg-white outline-none">
+                        <option value="Bus">🚌 Bus Ticket / Boarding</option>
+                        <option value="Hotel">🏨 Hotel Check-In</option>
+                        <option value="Sightseeing">📸 Sightseeing / Tour</option>
+                        <option value="Dining">🍽️ Food Halt / Dining</option>
+                    </select>
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeAddActivityModal()" class="px-4 py-2 font-bold text-slate-500">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-tripscale-500 text-white rounded-xl font-extrabold">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- M-Ticket Export Modal -->
+    <div id="exportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <span class="text-[10px] font-black text-tripscale-500 uppercase tracking-widest">TripScale Sync</span>
+                    <h3 class="text-base font-extrabold text-slate-900">Export Bus M-Tickets</h3>
+                </div>
+                <button onclick="closeExportModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="space-y-3">
+                <button onclick="triggerExport('M-Ticket WhatsApp')" class="w-full p-3.5 rounded-2xl border border-slate-200 hover:border-tripscale-500 hover:bg-tripscale-50 transition flex items-center justify-between text-left">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-emerald-500 text-xl"></i>
+                        <div>
+                            <p class="font-extrabold text-slate-900 text-xs">WhatsApp M-Ticket</p>
+                            <p class="text-[10px] text-slate-400">Send PDF bus pass & boarding details</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-xs text-slate-300"></i>
+                </button>
+            </div>
+            <div id="exportStatus" class="mt-3 p-2 bg-slate-100 rounded-xl text-center text-[10px] font-bold text-slate-600 hidden"></div>
+        </div>
+    </div>
+
+    <!-- New Trip Modal -->
+    <div id="bookingModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-extrabold text-slate-900">Initialize TripScale Trip</h3>
+                <button onclick="closeBookingModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="confirmNewTrip(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 uppercase mb-1">Trip Name</label>
+                    <input type="text" id="tripNameInput" required value="Goa Volvo Bus Getaway" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Travel Date</label>
+                        <input type="date" value="2026-10-15" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Duration (Days)</label>
+                        <input type="number" value="3" min="1" max="15" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                    </div>
+                </div>
+                <button type="submit" class="w-full py-3 bg-tripscale-500 text-white rounded-xl font-extrabold uppercase">Create Workspace</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="addExpenseModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-extrabold text-slate-900">Record Bus / Travel Expense</h3>
+                <button onclick="closeAddExpenseModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form onsubmit="saveNewExpense(event)" class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 uppercase mb-1">Description</label>
+                    <input type="text" id="expDesc" required placeholder="e.g. 3x Volvo Sleeper Bus Tickets" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Amount (₹)</label>
+                        <input type="number" id="expAmount" required min="1" placeholder="3600" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-medium outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 uppercase mb-1">Paid By</label>
+                        <select id="expPayer" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 font-bold bg-white outline-none"></select>
+                    </div>
+                </div>
+                <div class="pt-2 flex justify-end gap-2">
+                    <button type="button" onclick="closeAddExpenseModal()" class="px-4 py-2 font-bold text-slate-500">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-tripscale-500 text-white rounded-xl font-extrabold">Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-darknavy text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700">
+            <div id="toastIcon" class="text-tripscale-500"><i class="fa-solid fa-bus"></i></div>
+            <span id="toastMsg" class="text-xs font-bold">Notification message</span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-darknavy text-slate-400 py-10 border-t border-slate-800 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 bg-tripscale-500 rounded-lg flex items-center justify-center text-white font-extrabold">
+                    <i class="fa-solid fa-scale-balanced text-xs"></i>
+                </div>
+                <span class="text-base font-black text-white">TripScale</span>
+                <span class="text-slate-500">| Bus Booking & Group Travel Platform</span>
+            </div>
+            <p class="text-slate-500">&copy; 2026 TripScale Platform. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const formatINR = (val) => '₹' + val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // App State styled for TripScale ecosystem
+        let appState = {
+            activeDayIndex: 0,
+            selectedBusForSeat: null,
+            chosenSeats: [],
+            buses: [
+                { id: 'b1', operator: 'IntrCity SmartBus', type: 'AC Sleeper (2+1)', rating: '4.8', ratingCount: '1,240', depTime: '20:30', arrTime: '07:15', duration: '10h 45m', price: 1350, seatsLeft: 12, primo: true },
+                { id: 'b2', operator: 'VRL Travels', type: 'Volvo Multi-Axle A/C Sleeper', rating: '4.7', ratingCount: '3,890', depTime: '21:15', arrTime: '08:30', duration: '11h 15m', price: 1490, seatsLeft: 6, primo: true },
+                { id: 'b3', operator: 'Zingbus AC Sleeper', type: 'AC Sleeper', rating: '4.5', ratingCount: '850', depTime: '22:00', arrTime: '09:00', duration: '11h 00m', price: 1100, seatsLeft: 18, primo: false },
+                { id: 'b4', operator: 'KSRTC Swift Volvo', type: 'Volvo Multi-Axle', rating: '4.6', ratingCount: '2,100', depTime: '19:45', arrTime: '06:30', duration: '10h 45m', price: 1200, seatsLeft: 4, primo: false }
+            ],
+            days: [
+                {
+                    dayNumber: 1,
+                    title: "Day 1: Departure from Mumbai via IntrCity SmartBus",
+                    activities: [
+                        { id: 1, time: "20:30", title: "Boarding at Borivali East (IntrCity SmartBus)", cost: 1350, category: "Bus" },
+                        { id: 2, time: "23:45", title: "Midnight Food Halt - Highway Plaza", cost: 350, category: "Dining" }
+                    ]
+                },
+                {
+                    dayNumber: 2,
+                    title: "Day 2: Goa Arrival & Beach Shack Check-In",
+                    activities: [
+                        { id: 3, time: "07:15", title: "Arrival at Mapusa Bus Stand, Goa", cost: 0, category: "Bus" },
+                        { id: 4, time: "11:00", title: "Check-in at Calangute Beach Resort", cost: 3500, category: "Hotel" }
+                    ]
+                }
+            ],
+            travelers: [
+                { id: 't1', name: 'Aarav Sharma', role: 'Primary Passenger', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80' },
+                { id: 't2', name: 'Priya Verma', role: 'Passenger', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&q=80' }
+            ],
+            poll: {
+                options: [
+                    { id: 'o1', name: '🚌 IntrCity SmartBus (20:30 PM Departure)', votes: 2, voters: ['Aarav', 'Priya'] },
+                    { id: 'o2', name: '🚌 VRL Volvo Sleeper (21:15 PM Departure)', votes: 0, voters: [] }
+                ]
+            },
+            expenses: [
+                { id: 'e1', desc: '2x IntrCity SmartBus Sleeper Seats', amount: 2700, paidBy: 'Aarav Sharma' }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderBuses('all');
+            renderDayTabs();
+            renderActivities();
+            renderTravelers();
+            renderPoll();
+            renderExpenses();
+            updateTripTotal();
+            populatePayerSelect();
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+
+        function swapCities() {
+            const from = document.getElementById('fromInput').value;
+            const to = document.getElementById('toInput').value;
+            document.getElementById('fromInput').value = to;
+            document.getElementById('toInput').value = from;
+        }
+
+        function executeBusSearch() {
+            const f = document.getElementById('fromInput').value;
+            const t = document.getElementById('toInput').value;
+            showToast(`Searching available TripScale operators from ${f} to ${t}...`);
+            window.location.hash = '#destinations';
+        }
+
+        // --- BUS OPERATOR LISTINGS & SEAT SELECTOR ---
+        function renderBuses(filter) {
+            const container = document.getElementById('busListingsContainer');
+            const list = filter === 'all' 
+                ? appState.buses 
+                : filter === 'Primo' ? appState.buses.filter(b => b.primo) : appState.buses.filter(b => b.type.includes(filter));
+
+            container.innerHTML = list.map(bus => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <h3 class="font-black text-slate-900 text-base sm:text-lg">${bus.operator}</h3>
+                                ${bus.primo ? '<span class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[9px] font-black uppercase rounded-md border border-amber-200">primo</span>' : ''}
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium">${bus.type}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="px-2 py-0.5 rounded-md bg-emerald-600 text-white text-xs font-black"><i class="fa-solid fa-star text-[10px] mr-1"></i>${bus.rating}</span>
+                                <span class="text-[10px] font-bold text-slate-400">(${bus.ratingCount} ratings)</span>
+                            </div>
+                        </div>
+
+                        <!-- Schedule timings -->
+                        <div class="flex items-center gap-6 text-center">
+                            <div>
+                                <p class="text-base font-black text-slate-900">${bus.depTime}</p>
+                                <p class="text-[10px] font-bold text-slate-400">Departure</p>
+                            </div>
+                            <div class="text-slate-300 text-xs">
+                                <p class="text-[10px] font-extrabold text-slate-400">${bus.duration}</p>
+                                ────────
+                            </div>
+                            <div>
+                                <p class="text-base font-black text-slate-900">${bus.arrTime}</p>
+                                <p class="text-[10px] font-bold text-slate-400">Arrival</p>
+                            </div>
+                        </div>
+
+                        <!-- Fare & Seat CTAs -->
+                        <div class="flex items-center justify-between lg:justify-end gap-5 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+                            <div>
+                                <p class="text-[9px] font-bold text-slate-400 uppercase">Starts from</p>
+                                <p class="text-xl font-black text-tripscale-600">₹${bus.price}</p>
+                                <p class="text-[10px] font-extrabold text-amber-600">${bus.seatsLeft} Seats available</p>
+                            </div>
+                            <button onclick="openSeatModal('${bus.id}')" class="px-5 py-3 bg-tripscale-500 hover:bg-tripscale-600 text-white font-extrabold text-xs uppercase rounded-xl transition shadow-md shadow-tripscale-500/20">
+                                View Seats
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterBuses(type) {
+            document.querySelectorAll('.bus-filter-btn').forEach(btn => {
+                if(btn.dataset.type === type) {
+                    btn.classList.add('bg-tripscale-500', 'text-white');
+                    btn.classList.remove('text-slate-600', 'hover:bg-slate-100');
+                } else {
+                    btn.classList.remove('bg-tripscale-500', 'text-white');
+                    btn.classList.add('text-slate-600', 'hover:bg-slate-100');
+                }
+            });
+            renderBuses(type);
+        }
+
+        // --- SEAT LAYOUT MODAL LOGIC ---
+        function openSeatModal(busId) {
+            appState.selectedBusForSeat = appState.buses.find(b => b.id === busId);
+            appState.chosenSeats = [];
+            document.getElementById('seatModalBusName').innerText = appState.selectedBusForSeat.operator;
+            document.getElementById('selectedSeatsLabel').innerText = 'None';
+            
+            const grid = document.getElementById('seatGrid');
+            grid.innerHTML = '';
+
+            for(let i = 1; i <= 12; i++) {
+                const isBooked = (i === 3 || i === 7);
+                grid.innerHTML += `
+                    <button onclick="toggleSeat(this, ${i})" ${isBooked ? 'disabled' : ''} 
+                            class="seat-btn p-3 rounded-xl font-extrabold text-xs border ${
+                                isBooked ? 'bg-slate-200 border-slate-300 text-slate-400 cursor-not-allowed' : 'bg-white border-slate-300 text-slate-700 hover:border-tripscale-500'
+                            }">
+                        L${i}
+                    </button>
+                `;
+            }
+            document.getElementById('seatModal').classList.remove('hidden');
+        }
+
+        function toggleSeat(btn, seatNum) {
+            const seatId = `L${seatNum}`;
+            if(appState.chosenSeats.includes(seatId)) {
+                appState.chosenSeats = appState.chosenSeats.filter(s => s !== seatId);
+                btn.classList.remove('bg-emerald-500', 'text-white', 'border-emerald-600');
+                btn.classList.add('bg-white', 'text-slate-700');
+            } else {
+                appState.chosenSeats.push(seatId);
+                btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                btn.classList.remove('bg-white', 'text-slate-700');
+            }
+            document.getElementById('selectedSeatsLabel').innerText = appState.chosenSeats.length > 0 ? appState.chosenSeats.join(', ') : 'None';
+        }
+
+        function closeSeatModal() {
+            document.getElementById('seatModal').classList.add('hidden');
+        }
+
+        function confirmSeatBooking() {
+            if(appState.chosenSeats.length === 0) {
+                alert('Please select at least one seat!');
+                return;
+            }
+            const bus = appState.selectedBusForSeat;
+            const totalCost = bus.price * appState.chosenSeats.length;
+
+            appState.days[0].activities.push({
+                id: Date.now(),
+                time: bus.depTime,
+                title: `${bus.operator} (${appState.chosenSeats.join(', ')})`,
+                cost: totalCost,
+                category: "Bus"
+            });
+
+            closeSeatModal();
+            renderActivities();
+            updateTripTotal();
+            showToast(`Booked ${appState.chosenSeats.length} seat(s) on ${bus.operator}!`);
+        }
+
+        // --- ITINERARY BUILDER LOGIC ---
+        function renderDayTabs() {
+            const container = document.getElementById('dayTabsContainer');
+            container.innerHTML = appState.days.map((day, idx) => `
+                <button onclick="switchDay(${idx})" class="px-4 py-2 rounded-xl text-xs font-bold transition shrink-0 ${
+                    idx === appState.activeDayIndex ? 'bg-tripscale-500 text-white' : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'
+                }">
+                    Day ${day.dayNumber}
+                </button>
+            `).join('');
+        }
+
+        function switchDay(index) {
+            appState.activeDayIndex = index;
+            renderDayTabs();
+            renderActivities();
+        }
+
+        function renderActivities() {
+            const activeDay = appState.days[appState.activeDayIndex];
+            document.getElementById('currentDayTitle').innerText = activeDay.title;
+            document.getElementById('currentDaySubtitle').innerText = `${activeDay.activities.length} items scheduled`;
+
+            const container = document.getElementById('activitiesList');
+            if(activeDay.activities.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 italic">No bus transfers or activities scheduled for this day.</p>`;
+                return;
+            }
+
+            container.innerHTML = activeDay.activities.map(act => `
+                <div class="p-3.5 rounded-2xl bg-white border border-slate-200 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="px-2.5 py-1 rounded-lg bg-tripscale-50 text-tripscale-600 text-xs font-black">
+                            ${act.time}
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-slate-900 text-xs sm:text-sm">${act.title}</h4>
+                            <span class="text-[10px] font-bold text-slate-400">${act.category} • ${formatINR(act.cost)}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteActivity(${act.id})" class="w-7 h-7 rounded-lg bg-slate-100 text-slate-400 hover:text-blue-600 flex items-center justify-center">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function addNewDay() {
+            const num = appState.days.length + 1;
+            appState.days.push({ dayNumber: num, title: `Day ${num}: Local Sightseeing & Transit`, activities: [] });
+            switchDay(num - 1);
+            showToast(`Day ${num} added!`);
+        }
+
+        function deleteActivity(id) {
+            const day = appState.days[appState.activeDayIndex];
+            day.activities = day.activities.filter(a => a.id !== id);
+            renderActivities();
+            updateTripTotal();
+            showToast('Item removed.');
+        }
+
+        function updateTripTotal() {
+            let total = 0;
+            appState.days.forEach(d => d.activities.forEach(a => total += a.cost));
+            document.getElementById('tripTotalPrice').innerText = formatINR(total);
+        }
+
+        function openAddActivityModal(cat = null) {
+            document.getElementById('addActivityModal').classList.remove('hidden');
+            if(cat) document.getElementById('actCategory').value = cat;
+        }
+
+        function closeAddActivityModal() {
+            document.getElementById('addActivityModal').classList.add('hidden');
+        }
+
+        function saveNewActivity(e) {
+            e.preventDefault();
+            const title = document.getElementById('actTitle').value;
+            const time = document.getElementById('actTime').value;
+            const cost = parseFloat(document.getElementById('actCost').value) || 0;
+            const category = document.getElementById('actCategory').value;
+
+            appState.days[appState.activeDayIndex].activities.push({ id: Date.now(), title, time, cost, category });
+            closeAddActivityModal();
+            renderActivities();
+            updateTripTotal();
+            showToast('Item saved!');
+        }
+
+        // --- GROUP & LEDGER ---
+        function renderTravelers() {
+            const list = document.getElementById('travelersList');
+            list.innerHTML = appState.travelers.map(t => `
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                    <div class="flex items-center gap-2.5">
+                        <img src="${t.avatar}" class="w-8 h-8 rounded-full border border-tripscale-300">
+                        <span class="font-extrabold text-slate-800 text-xs">${t.name}</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">${t.role}</span>
+                </div>
+            `).join('');
+        }
+
+        function addTraveler(e) {
+            e.preventDefault();
+            const name = document.getElementById('newTravelerName').value.trim();
+            if(!name) return;
+            appState.travelers.push({ id: 't' + Date.now(), name, role: 'Passenger', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80' });
+            document.getElementById('newTravelerName').value = '';
+            renderTravelers();
+            populatePayerSelect();
+            showToast(`${name} added!`);
+        }
+
+        function renderPoll() {
+            const container = document.getElementById('pollOptionsContainer');
+            container.innerHTML = appState.poll.options.map(opt => `
+                <div class="p-3 rounded-2xl border border-slate-200 bg-white flex items-center justify-between">
+                    <div>
+                        <p class="font-extrabold text-slate-900 text-xs">${opt.name}</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">${opt.votes} votes (${opt.voters.join(', ') || 'None'})</p>
+                    </div>
+                    <button onclick="votePoll('${opt.id}')" class="px-3 py-1 bg-tripscale-500 text-white rounded-lg text-xs font-bold">Vote</button>
+                </div>
+            `).join('');
+        }
+
+        function votePoll(id) {
+            const opt = appState.poll.options.find(o => o.id === id);
+            if(opt) {
+                opt.votes += 1;
+                opt.voters.push('You');
+                renderPoll();
+                showToast('Vote logged!');
+            }
+        }
+
+        function renderExpenses() {
+            const list = document.getElementById('expenseList');
+            list.innerHTML = appState.expenses.map(e => `
+                <div class="p-3 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-between text-xs">
+                    <div>
+                        <p class="font-extrabold text-white">${e.desc}</p>
+                        <p class="text-[10px] text-slate-400">Paid by ${e.paidBy}</p>
+                    </div>
+                    <span class="font-black text-amber-400">${formatINR(e.amount)}</span>
+                </div>
+            `).join('');
+            calculateBalances();
+        }
+
+        function calculateBalances() {
+            const count = appState.travelers.length || 1;
+            let total = 0;
+            let paidMap = {};
+            appState.travelers.forEach(t => paidMap[t.name] = 0);
+            appState.expenses.forEach(e => {
+                total += e.amount;
+                paidMap[e.paidBy] = (paidMap[e.paidBy] || 0) + e.amount;
+            });
+
+            const share = total / count;
+            document.getElementById('settlementSummary').innerHTML = appState.travelers.map(t => {
+                const bal = (paidMap[t.name] || 0) - share;
+                return `
+                    <div class="p-2.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-between text-xs">
+                        <span class="font-bold text-slate-300">${t.name}</span>
+                        <span class="font-black ${bal >= 0 ? 'text-emerald-400' : 'text-blue-400'}">${bal >= 0 ? '+' : ''}${formatINR(bal)}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openAddExpenseModal() { document.getElementById('addExpenseModal').classList.remove('hidden'); }
+        function closeAddExpenseModal() { document.getElementById('addExpenseModal').classList.add('hidden'); }
+
+        function populatePayerSelect() {
+            document.getElementById('expPayer').innerHTML = appState.travelers.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+        }
+
+        function saveNewExpense(e) {
+            e.preventDefault();
+            const desc = document.getElementById('expDesc').value;
+            const amount = parseFloat(document.getElementById('expAmount').value) || 0;
+            const paidBy = document.getElementById('expPayer').value;
+
+            appState.expenses.push({ id: 'e' + Date.now(), desc, amount, paidBy });
+            closeAddExpenseModal();
+            renderExpenses();
+            showToast('Expense added!');
+        }
+
+        function openExportModal() { document.getElementById('exportModal').classList.remove('hidden'); }
+        function closeExportModal() { document.getElementById('exportModal').classList.add('hidden'); }
+
+        function triggerExport(type) {
+            const status = document.getElementById('exportStatus');
+            status.classList.remove('hidden');
+            status.innerText = `Generating TripScale M-Ticket...`;
+            setTimeout(() => {
+                status.innerText = `M-Ticket sent via ${type}!`;
+                showToast('M-Ticket synchronized!');
+            }, 1000);
+        }
+
+        function openBookingModal() { document.getElementById('bookingModal').classList.remove('hidden'); }
+        function closeBookingModal() { document.getElementById('bookingModal').classList.add('hidden'); }
+
+        function confirmNewTrip(e) {
+            e.preventDefault();
+            closeBookingModal();
+            showToast('TripScale workspace updated!');
+        }
+
+        function copyInviteLink() { showToast('Group invite link copied!'); }
+    </script>
+</body>
+</html>
